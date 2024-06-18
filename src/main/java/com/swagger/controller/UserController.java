@@ -2,6 +2,11 @@ package com.swagger.controller;
 
 import com.swagger.model.User;
 import com.swagger.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +27,31 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
+    @Operation(
+            summary = "Find user by ID",
+            description = "Returning user by ID",
+            operationId = "findById",
+            tags = {"User"},
+            parameters = {
+                    @Parameter(
+                            name = "id",
+                            description = "user ID",
+                            required = true,
+                            example = "1000")
+            },
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Success",
+                            content = @Content(
+                                    schema = @Schema(implementation = User.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "User not found"
+                    )
+            }
+    )
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(Long id) {
         User user = userService.findById(id);
